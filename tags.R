@@ -1,5 +1,6 @@
 
-# message("The function *tags* takes four arguments: 1st your pinterest login, 2nd your pinterest password, 3rd the URL of the pinterest board, 4th the name you will give to your data file, ending .txt.")
+# message("The function *tags* takes four arguments: 1st your pinterest login, 2nd your pinterest password, 
+# 3rd the URL of the pinterest board, 4th the name you will give to your data file, ending .txt.")
 #
 # tags <- function(enterLogin, enterPassword, enterURL, dataFile) {
 #
@@ -33,6 +34,8 @@
 
     pinText <- readLines("pins.txt")
     x <- grep("pinDescription", pinText)
+	
+	
     y <- grep("SocialIconsCounts", pinText)
 
     integers <- data.frame(x, y)
