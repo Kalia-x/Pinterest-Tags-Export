@@ -26,15 +26,18 @@
 
 #####################
 
-    options(stringsAsFactors = FALSE)
+options(stringsAsFactors = FALSE)
 
-# Open browser (chrome is best), navigate to board (while logged in). Zoom out as far as you can. Make window as wide as possible.
+# Open browser (firefox is best), navigate to board (while logged in). Zoom out as far as you can. Make window as wide as possible.
 # If you can see ALL of your pinned items at once, that is good.
 # Right click, save page. File name: "pins.txt". File type: "webpage, complete"
 # The files folder can be deleted, the .txt file should be placed in current working directory.
-# File should begin: <!DOCTYPE html><!-- saved from url=(0040)https://uk.pinterest.com/kalia_/clothes/ -->
 
-    pinText <- readLines("pins.txt")
+importTags <- function(fileName="pins.txt") {
+# function takes one argument, of the file name for the html of the board. By default, can call it "pins.txt"
+
+    options(warn = -1)
+    pinText <- readLines(fileName)
     x <- grep("pinDescription", pinText)
     y <- grep("SocialIconsCounts", pinText)
     integers <- data.frame(x, y)
@@ -80,15 +83,26 @@
     latest <- paste(latest, collapse = "")
     splitText <- strsplit(latest, ",")
     allTags <- str_trim(splitText[[1]])
+    allTags <<- allTags
 # collapses all of the elements into one giant character vector
 # splits the vector into separate elements based on a comma, outputs it within a list
 # subsets the list, extracting all of the elements into a vector. Removes any remaining whitespace
 
+}
+
     ###########################
+
+analyseTags <- function() {
+    if(exists("allTags")==FALSE) {
+        importTags()
+    }
+# function runs consecutively after the first one, taking the outputted data frame as argument
+# if the first function hasn't been used, runs it automatically with default arguments
 
     tagsData <- data.frame(table(allTags))
     tagsData <- tagsData[order(tagsData$Freq, decreasing=TRUE), ]
     tagsData <- tagsData[grep("^[^from]", tagsData$allTags), ]
+    tagsData <<- tagsData
 # creates a data frame showing the frequency of unique elements (descriptions)
 # also removes false caught data, where it stated: "from: examplesite.tumblr.com" etc
 
@@ -104,6 +118,7 @@
         colourFreq <- rbind(colourFreq, tempFrame)
     }
     colourFreq <- colourFreq[order(colourFreq$colour_freq, decreasing=TRUE), ]
+    colourFreq <<- colourFreq
 # loop which takes each colour from the colour vector, then searches for elements using that colour within the descriptions
 # It then counts the amount of times that colour appears, saving it in a data frame alongside the colour name
 # Data frame is added to for each colour, then ordered by frequency
@@ -113,6 +128,8 @@
 # Next, need to:
 # Sort out the elements that use /
     slashTags <- tagsData[grep("/", tagsData$allTags), ]
-    # ((is split based on colour and clothing alternatively, which makes it difficult))
+# ((is split based on colour and clothing alternatively, which makes it difficult))
 
 # Do more analysis and grouping, for example, based on tops/bottoms, clothing vs colour etc
+
+}
